@@ -91,7 +91,8 @@
 	   					Math.pow(y - Number(data[i]["longitude"]) ,2));
 	   					data[i]['distance'] = distance;		
 	   				};
-
+	   				//finding 5 minimum distance elements can be done efficiently but
+	   				// will not create much difference as the data set is quite small
 	   				data.sort(function(a,b){
 	   					return a["distance"] - b['distance'];
 	   				});
