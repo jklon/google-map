@@ -91,8 +91,7 @@
 	   					Math.pow(y - Number(data[i]["longitude"]) ,2));
 	   					data[i]['distance'] = distance;		
 	   				};
-	   				//finding 5 minimum distance elements can be done efficiently but
-	   				// will not create much difference as the data set is quite small
+
 	   				data.sort(function(a,b){
 	   					return a["distance"] - b['distance'];
 	   				});
@@ -121,6 +120,11 @@
 
 	<body style="background-color:White">
 		<div id = "map"> </div>
+		<h1>Click anywhere to get food trucks in the nearby location (2,000 meters) </h1>
+		<p> click on the trucks to know 
+			what do they contain, the data is being extracted from SF govt. site on every click using 
+			jQuery, red trucks are the nearest 5 trucks
+		</p>
 
 	</body> 
 </html>
