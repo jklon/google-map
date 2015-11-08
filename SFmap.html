@@ -68,6 +68,21 @@
 	        calls createmarker
 	        calculates the distances of all the markers and select nearest 5
 	        */
+	        function distanceCalculator(lat1, lng1, lat2, lng2){
+
+			    var R = 6371000; 
+			    var dLat = (lat2-lat1)*Math.PI/180;  
+			    var dLon = (lng2-lng1)*Math.PI/180;
+			    var rad_lat1 = lat1*Math.PI/180;
+			    var rad_lat2 = lat2*Math.PI/180;  
+			    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
+			                    Math.cos(rad_lat1) * Math.cos(rad_lat2) * 
+			                    Math.sin(dLon/2) * Math.sin(dLon/2);  
+			    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+			    return R * c; 
+	        }
+
+
 			function getData(x,y){
 				url = "https://data.sfgov.org/resource/rqzj-sfat.json?$where=" +
 						"within_circle(location,%20" + x.toString() + ",%20" + y.toString()+ ",%202000)";
@@ -77,7 +92,9 @@
 	   				for (var i = 0; i < data.length; i++){
 	   					if(data[i]["status"] == "APPROVED" && data[i]["facilitytype"] == "Truck"){
 	   					var obj = data[i];
-	   					createMarker({lat:Number(obj['latitude']), lng:Number(obj['longitude'])},
+	   					clicked_lat = Number(obj['latitude']);
+	   					clicked_lng = Number(obj['longitude']);
+	   					createMarker({lat:clicked_lat, lng:clicked_lng},
 	   						obj["fooditems"], 'black');
 	   					}else{
 	   						data.splice(i,1);
@@ -87,15 +104,18 @@
 	   				}
 	   				
 	   				for (var i = 0; i < data.length; i++){
-	   					distance = Math.sqrt(Math.pow(x - Number(data[i]["latitude"]) ,2) + 
-	   					Math.pow(y - Number(data[i]["longitude"]) ,2));
-	   					data[i]['distance'] = distance;		
+	   					clicked_lat = Number(data[i]['latitude']);
+	   					clicked_lng = Number(data[i]['longitude']);
+	   					distance = distanceCalculator(x, y, clicked_lat, clicked_lng);
+	   					data[i]['distance'] = distance;
+	   							
 	   				};
 
 	   				data.sort(function(a,b){
 	   					return a["distance"] - b['distance'];
 	   				});
 	   				for (var i = 0; i < 5; i++){
+	   					console.log(data[i]['distance']);
 	   					createMarker({lat:Number(data[i]['latitude']), lng:Number(data[i]['longitude'])},
 	   						data[i]["fooditems"], 'red');
 	  				}
